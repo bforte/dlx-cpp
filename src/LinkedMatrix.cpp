@@ -1,4 +1,4 @@
-#include <dlx/LinkedMatrix.hpp>
+#include <LinkedMatrix.hpp>
 
 #include <assert.h>
 #include <algorithm>

@@ -1,4 +1,4 @@
-#include <dlx/ExactCoverProblem.hpp>
+#include <ExactCoverProblem.hpp>
 
 #include <algorithm>
 #include <stdexcept>

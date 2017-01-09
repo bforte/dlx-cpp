@@ -1,4 +1,4 @@
-#include <dlx/AlgorithmDLX.hpp>
+#include <AlgorithmDLX.hpp>
 
 #include <assert.h>
 #include <stdexcept>

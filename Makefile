@@ -1,36 +1,25 @@
 CXX ?= g++
-CXXFLAGS += -Iinclude -std=c++11 -pedantic -Wall -O2
+CXXFLAGS += -Iinclude -I/usr/include/python2.7 -std=c++11 -pedantic -Wall -O3 -fPIC
 
-LIB_SRC = src/*.cpp
+all: dlx-cpp wrapper shared_library
 
-all: examples
+no_dlx-cpp: wrapper shared_library
 
-examples:
+dlx-cpp:
 	mkdir -p build
-	$(CXX) $(CXXFLAGS) -o build/dlx $(LIB_SRC) example/dlx/*.cpp
-	$(CXX) $(CXXFLAGS) -o build/sudoku $(LIB_SRC) example/sudoku/*.cpp
-	$(CXX) $(CXXFLAGS) -o build/langford $(LIB_SRC) example/langford/*.cpp
-	$(CXX) $(CXXFLAGS) -o build/nqueens $(LIB_SRC) example/nqueens/*.cpp
-	$(CXX) $(CXXFLAGS) -o build/npieces $(LIB_SRC) example/npieces/*.cpp
-	$(CXX) $(CXXFLAGS) -o build/polyomino $(LIB_SRC) example/polyomino/*.cpp
+	$(CXX) $(CXXFLAGS) -c src/AlgorithmDLX.cpp -o build/AlgorithmDLX.o
+	$(CXX) $(CXXFLAGS) -c src/ExactCoverProblem.cpp -o build/ExactCoverProblem.o
+	$(CXX) $(CXXFLAGS) -c src/LinkedMatrix.cpp -o build/LinkedMatrix.o
 
-build_test:
+wrapper:
 	mkdir -p build
-	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/*.cpp -lgtest -o build/test
-	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/sudoku/*.cpp -lgtest -o build/test_sudoku
-	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/langford/*.cpp -lgtest -o build/test_langford
-	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/nqueens/*.cpp -lgtest -o build/test_nqueens
-	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/npieces/*.cpp -lgtest -o build/test_npieces
-	$(CXX) $(CXXFLAGS) $(LIB_SRC) test/test_runner.cpp test/polyomino/*.cpp -lgtest -o build/test_polyomino
+	$(CXX) $(CXXFLAGS) -c src/libexactcover.cpp -o build/libexactcover.o
 
-test: build_test
-	./build/test
-	./build/test_sudoku
-	./build/test_langford
-	./build/test_nqueens
-	./build/test_npieces
-	./build/test_polyomino
-.PHONY: test
+shared_library:
+	mkdir -p dlx_python
+	touch dlx_python/__init__.py
+	$(CXX) $(CXXFLAGS) -shared build/*.o -I/usr/include/python2.7 -lboost_python -o dlx_python/libexactcover.so
 
 clean:
 	rm -rf build
+	rm -rf dlx_python
