@@ -7,3 +7,8 @@ Example
 =======
 
 See the `test_dlx_module.py`.
+
+TODO
+====
+
+  - add sparse input
